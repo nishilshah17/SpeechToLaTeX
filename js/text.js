@@ -215,6 +215,10 @@ function convert(s) {
 }
 
 function isReserved(s) {
+    
+    if (s.indexOf("equation") > -1)
+        return true;
+    
     switch(s) {
         case "line": return true;
         case "equation": return true;
@@ -238,7 +242,7 @@ function convertText(text) {
 
     var words = [];
 
-    /*var convertedText = "\\\documentclass{article}" +
+    var convertedText = "\\\documentclass{article}" +
         "\\begin{document}" +
         "\\title{(Title)}" +
         "\\\author{(Author)}" +
@@ -247,7 +251,7 @@ function convertText(text) {
         "\\tableofcontents" +
         "\\newpage" +
         "\\section{Parametrics and Polar Coordinates}" +
-        "\\newline ";*/
+        "\\newline ";
 
     var spaces = countSpaces(text);
 
@@ -255,18 +259,28 @@ function convertText(text) {
 
         var append = false;
         
+        var tmp;
+        
         // keywords
-        if (tmp == "new" || tmp == "end" || tmp == "and" || tmp == "absolute")
+        console.log("tmp: "+tmp);
+        if (tmp == "new" || tmp == "end" || tmp == "and" || tmp == "absolute") {
             append = true;
+        }
 
-        var tmp = "";
+        tmp = "";
         if (text.indexOf(" ") < 0)
             tmp = text;
         else
             tmp = [text.substring(0,text.indexOf(" "))];
-        if (append && isReserved(tmp))
+        
+        if (isReserved(tmp))
+            console.log("tmp: "+tmp+" reserved");
+        
+        if (append && isReserved(tmp)) {
+            console.log("words[i-1]: "+words[i-1]);
             words[i-1] = words[i-1]+tmp;
-        else
+            console.log("words[i-1]: "+words[i-1]);
+        } else
             words = words.concat(tmp);
         text = text.substring(text.indexOf(" ")+1);
     }
@@ -276,23 +290,12 @@ function convertText(text) {
     for (var i = 0; i < words.length; i++) {
         convertedText+=convert(words[i]);
     }
+    
+    convertedText+="\\end{document}";
 
     compileLaTeX(convertedText);
-    addToLatexEditor("\\end{document}", null)
-
-        /*"\\\documentclass{article}" +
-        "\\begin{document}" +
-        "\\title{MCLA Concise Review}" +
-        "\\\author{Ram Vellanki, Manoaj Kandiakounder, Pranav Marupudi, Jintao Hang}" +
-        "\\date{June 2014}" +
-        "\\maketitle" +
-        "\\tableofcontents" +
-        "\\newpage" +
-        "\\section{Parametrics and Polar Coordinates}" +
-        "\\end{document}"
-        ;*/
-
-    //compileLaTeX();
+    
+    //addToLatexEditor("\\end{document}", null)
 
 }
 
