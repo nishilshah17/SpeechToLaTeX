@@ -3,16 +3,16 @@ var inSub = false;
 var inAbsolute = false;
 
 function countSpaces(s) {
-    
+
     var count = 0;
-    
+
     for (var i = 0; i < s.length; i++) {
         if (s.charAt(i) == " ")
             count++;
     }
-    
+
     return count;
-    
+
 }
 
 function isNumber(s) {
@@ -20,7 +20,7 @@ function isNumber(s) {
 }
 
 function isVariable(s) {
-    
+
     if (s.length == 1 && s.match(/^[a-zA-Z]/))
         return true;
     
@@ -40,17 +40,20 @@ function isVariable(s) {
         case "lambda": return true;
         case "mu": return true;
     }
-    
+
+    if (s == "ex" || s == "why")
+        return true;
+
     return false;
-    
+
 }
 
 function convertVariable(s) {
- 
-    
+
+
     if (s.length == 1 && s.match(/^[a-zA-Z]/))
         return s;
-    
+
     switch (s) {
         case "ex": return "x";
         case "why": return "y";
@@ -79,7 +82,7 @@ function convertVariable(s) {
         case "psi": return "\psi";
         case "omega": return "\omega";
     }
-    
+
 }
 
 function isOperator(s) {
@@ -123,6 +126,9 @@ function convertOperator(s) {
         case "cross": return "\times";
         case "absolutevalue":   if (inEquation) return "\left|";
                                 else return "$\left|";
+        case "over": return "/";
+        case "divided": return "/";
+        case "by": return "/";
     }
 }
 
@@ -193,7 +199,7 @@ function convert(s) {
     if (!inEquation) {
         extension+=" ";
     }
-    
+
     if (isNumber(s)) {
         return s+extension;
     } else if (inEquation && isVariable(s.toLowerCase())) {
@@ -205,7 +211,7 @@ function convert(s) {
     } else {
         return s+extension;
     }
-    
+
 }
 
 function isReserved(s) {
@@ -229,10 +235,9 @@ function resetInputTypes() {
 }
 
 function convertText(text) {
-    
+
     var words = [];
-    
-    // ADD TITLE/AUTHOR/DATE                                                TODO
+
     var convertedText = "\\\documentclass{article}" +
         "\\begin{document}" +
         "\\title{(Title)}" +
@@ -243,17 +248,17 @@ function convertText(text) {
         "\\newpage" +
         "\\section{Parametrics and Polar Coordinates}" +
         "\\newline ";
-    
+
     var spaces = countSpaces(text);
-    
+
     for (var i = 0; i < spaces+1; i++) {
-        
+
         var append = false;
         
         // keywords
         if (tmp == "new" || tmp == "end" || tmp == "and" || tmp == "absolute")
             append = true;
-        
+
         var tmp = "";
         if (text.indexOf(" ") < 0)
             tmp = text;
@@ -267,13 +272,29 @@ function convertText(text) {
     }
     
     resetInputTypes();
-    
+
     for (var i = 0; i < words.length; i++) {
         convertedText+=convert(words[i]);
     }
-    
-    convertedText+="\\end{document}";
 
     compileLaTeX(convertedText);
+
+}
+
+function addToLatexEditor(text, type) {
+  var editor = ace.edit("editor");
+  editor.navigateFileEnd();
+
+  if(type == "title"){
+    if(text.length > 0)
+      text = "\\title{"+text+"}";
+  } else if (type == "author"){
+    if(text.length > 0)
+      text = "\\author{"+text+"}";
+  } else if (type == "date"){
+    if(text.length > 0)
+      text = "\\date{"+text+"}";
+  }
+  editor.insert(text+"\n");
 
 }

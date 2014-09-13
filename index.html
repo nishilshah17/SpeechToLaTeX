@@ -1,9 +1,12 @@
 <html>
   <head>
     <link rel="stylesheet" href="css/overlay.css" />
+    <link rel="stylesheet" href="css/editor.css" />
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/compile.js"></script>
     <script type="text/javascript" src="js/text.js"></script>
+    <script type="text/javascript" src="ace/ace.js"></script>
+
   </head>
   <!--<body onload="toggleOverlay()">-->
   <body>
@@ -16,7 +19,7 @@
       <div align="center"><input type="text" id="title" placeholder="Title" /></div><br>
       <div align="center"><input type="text" id="author" placeholder="Author(s)" /></div><br>
       <div align="center"><input type="date" id="date" /></div><br>
-      <div align="center"><button onmousedown="toggleOverlay()">Create Document</button></div>
+      <div align="center"><button onmousedown="submitInformation()">Create Document</button></div>
     </div>
     <div id="wrapper">-->
       <a href="#" onclick="start()"><img src="img/mic.png" /></a>
@@ -26,10 +29,19 @@
       <div id="results">
         <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
       </div>
+      <div id="editor">
+      </div>
       <div id="pdf"></div>
     <!--</div>-->
   </body>
   <script type="text/javascript">
+
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/xcode");
+    editor.getSession().setMode("ace/mode/latex");
+    editor.selectAll();
+    editor.removeLines();
+    addToLatexEditor("\\\documentclass{article}\\begin{document}", null);
 
     var final_transcript;
 
@@ -76,7 +88,7 @@
       interim_span.innerHTML = linebreak(interim_transcript);
     };
 
-    /*function toggleOverlay(){
+    function toggleOverlay(){
     	var overlay = document.getElementById('overlay');
     	var specialBox = document.getElementById('specialBox');
     	overlay.style.opacity = .8;
@@ -87,7 +99,14 @@
     		overlay.style.display = "block";
     		specialBox.style.display = "block";
     	}
-    }*/
+    }
+
+    function submitInformation() {
+      addToLatexEditor(document.getElementById('title').value, 'title');
+      addToLatexEditor(document.getElementById('author').value, 'author');
+      addToLatexEditor(document.getElementById('date').value, 'date');
+
+    }
 
   </script>
 </html>
