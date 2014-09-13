@@ -67,30 +67,11 @@
         }
       }
 
+      alert("final: "+final_transcript);
+      alert("interim: "+interim_transcript);
       final_span.innerHTML = linebreak(final_transcript);
       interim_span.innerHTML = linebreak(interim_transcript);
     };
 
-/*    recognition.onresult = function (event) {
-      // Calculating and saving the cursor position where the text will be displayed
-      textArea = document.getElementById('textarea');
-      var pos = textArea.getCursorPosition() - interimResult.length;
-      // Deleting an interim result from the textArea field
-      textArea.val(textArea.val().replace(interimResult, ''));
-      interimResult = '';
-      // Restoring the cursor position
-      textArea.setCursorPosition(pos);
-      for (var i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-            insertAtCaret('textarea', event.results[i][0].transcript);
-        } else {
-            // Outputting the interim result to the text field and adding
-            // an interim result marker - 0-length space
-            insertAtCaret('textarea', event.results[i][0].transcript + '\u200B');
-            interimResult += event.results[i][0].transcript + '\u200B';
-        }
-      }
-    };
-*/
   </script>
 </html>
