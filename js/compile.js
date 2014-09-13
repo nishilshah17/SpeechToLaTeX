@@ -6,7 +6,7 @@ function compileLaTeX(latex_code) {
   $.ajax({
     url: 'http://ramvellanki.com/s2l/tex/createFile.php',
     type: 'POST',
-    data: { latex: latex_code },
+    data: { latex: 'fjdsafdsa' },
     success: function(data) {
       alert(data);
     },
@@ -16,5 +16,5 @@ function compileLaTeX(latex_code) {
   });
 
   //embed pdf
-  document.getElementById('pdf').innnerHTML = '<iframe src="http://latex.aslushnikov.com/compile?url=https://raw.githubusercontent.com/aslushnikov/latex-online/master/sample/sample.tex" style="width:718px; height:700px;" frameborder="0"></iframe>';
+  $('#pdf').append("<iframe src='http://latex.aslushnikov.com/compile?url=https://raw.githubusercontent.com/aslushnikov/latex-online/master/sample/sample.tex' style='width:718px; height:700px;' frameborder='0'></iframe>")
 }
