@@ -1,18 +1,32 @@
 <html>
   <head>
+    <link rel="stylesheet" href="css/overlay.css"
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/compile.js"></script>
     <script type="text/javascript" src="js/text.js"></script>
   </head>
-  <body>
-    <a href="#" onclick="start()"><img src="img/mic.png" /></a>
-    <a href="#" onclick="stop()">Stop Mic</a>
-    <a href="#" onclick="handleSpeech()">Compile</a>
-    <!--<textarea id="textarea"></textarea>-->
-    <div id="results">
-      <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
+  <body onload="toggleOverlay()">
+
+    <div id="overlay"></div>
+    <div id="specialBox">
+      <h1 align="center">Speech To LaTeX</h1>
+      <h3 align="center">New Document</h3>
+      <br>
+      <div align="center"><input type="text" id="title" placeholder="Title" /></div><br>
+      <div align="center"><input type="text" id="author" placeholder="Author(s)" /></div><br>
+      <div align="center"><input type="date" id="date" /></div><br>
+      <div align="center"><button onmousedown="toggleOverlay()">Create Document</button></div>
     </div>
-    <div id="pdf"></div>
+    <div id="wrapper">
+      <a href="#" onclick="start()"><img src="img/mic.png" /></a>
+      <a href="#" onclick="stop()">Stop Mic</a>
+      <a href="#" onclick="handleSpeech()">Compile</a>
+      <!--<textarea id="textarea"></textarea>-->
+      <div id="results">
+        <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
+      </div>
+      <div id="pdf"></div>
+    </div>
   </body>
   <script type="text/javascript">
 
@@ -70,6 +84,19 @@
       final_span.innerHTML = linebreak(final_transcript);
       interim_span.innerHTML = linebreak(interim_transcript);
     };
+
+    function toggleOverlay(){
+    	var overlay = document.getElementById('overlay');
+    	var specialBox = document.getElementById('specialBox');
+    	overlay.style.opacity = .8;
+    	if(overlay.style.display == "block"){
+    		overlay.style.display = "none";
+    		specialBox.style.display = "none";
+    	} else {
+    		overlay.style.display = "block";
+    		specialBox.style.display = "block";
+    	}
+    }
 
   </script>
 </html>
