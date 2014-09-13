@@ -23,7 +23,7 @@ function isVariable(s) {
 
     if (s.length == 1 && s.match(/^[a-zA-Z]/))
         return true;
-
+    
     switch (s) {
         case "ex": return true;
         case "why": return true;
@@ -57,30 +57,30 @@ function convertVariable(s) {
     switch (s) {
         case "ex": return "x";
         case "why": return "y";
-        case "alpha": return "\alpha";
-        case "beta": return "\beta";
-        case "gamma": return "\gamma";
-        case "delta": return "\delta";
-        case "epsilon": return "\epsilon";
-        case "zeta": return "\zeta";
-        case "eta": return "\eta";
-        case "theta": return "\theta";
-        case "iota": return "\iota";
-        case "kappa": return "\kappa";
-        case "lambda": return "\lambda";
-        case "mu": return "\mu";
-        case "nu": return "\nu";
+        case "alpha": return "\\alpha";
+        case "beta": return "\\beta";
+        case "gamma": return "\\gamma";
+        case "delta": return "\\delta";
+        case "epsilon": return "\\epsilon";
+        case "zeta": return "\\zeta";
+        case "eta": return "\\eta";
+        case "theta": return "\\theta";
+        case "iota": return "\\iota";
+        case "kappa": return "\\kappa";
+        case "lambda": return "\\lambda";
+        case "mu": return "\\mu";
+        case "nu": return "\\nu";
         //case "xi": return "\xi";
-        case "omicron": return "\omicron";
-        case "pi": return "\pi";
-        case "rho": return "\rho";
-        case "sigma": return "\sigma";
-        case "tau": return "\tau";
+        case "omicron": return "\\omicron";
+        case "pi": return "\\pi";
+        case "rho": return "\\rho";
+        case "sigma": return "\\sigma";
+        case "tau": return "\\tau";
         //case "upsilon": return "\upsilon";
-        case "phi": return "\phi";
-        case "chi": return "\chi";
-        case "psi": return "\psi";
-        case "omega": return "\omega";
+        case "phi": return "\\phi";
+        case "chi": return "\\chi";
+        case "psi": return "\\psi";
+        case "omega": return "\\omega";
     }
 
 }
@@ -98,6 +98,7 @@ function isOperator(s) {
         case "divided": return true;
         case "by": return true;
         case "power": return true;
+        case "absolutevalue": return true;
         case "factorial": return true;
         case "integral": return true;
         case "derivative": return true;
@@ -120,20 +121,19 @@ function convertOperator(s) {
         case "divided": return "/";                             // TODO
         case "by": return "/";                                  // TODO
         case "factorial": return "!";
-        case "integral": return "\integral";
+        case "integral": return "\\integral";
         case "derivative": return "";                           // TODO
-        case "dot": return "\cdot";
-        case "cross": return "\times";
-        case "absolutevalue":   if (inEquation) return "\left|";
-                                else return "$\left|";
+        case "dot": return "\\cdot";
+        case "cross": return "\\times";
+        case "absolutevalue":   inAbsolute = true;
+                                return "\\left|";
         case "over": return "/";
         case "divided": return "/";
         case "by": return "/";
     }
 }
 
-function
-isCommand(s) {
+function isCommand(s) {
     switch (s) {
         case "compile": return true;
         case "newline": return true;
@@ -152,7 +152,7 @@ isCommand(s) {
 }
 
 function convertCommand(s) {
-
+    
     if (inEquation) {
         switch (s) {
             case "endequation": inEquation = false;
@@ -161,41 +161,39 @@ function convertCommand(s) {
                                 return "$";
         }
     }
-
+    
     if (inAbsolute) {
         switch(s) {
             case "end": inAbsolute = false;
-                        if (inEquation) return "\right|";
-                        else return "\right|$";
+                        return "\\right|";
             case "and": inAbsolute = false;
-                        if (inEquation) return "\right|";
-                        else return "\right|$";
+                        return "\\right|";
         }
     }
-
+    
     switch(s) {
         case "newline": return "\\newline";
         case "newpage": return "\\newpage";
         case "newequation": inEquation = true;
                             return "$";
-        case "italics": return "\textit";
-        case "italicized": return "\textit";
-        case "bold": return "\textbf";
-        case "bolded": return "\textbf";
+        case "italics": return "\\textit";
+        case "italicized": return "\\textit";
+        case "bold": return "\\textbf";
+        case "bolded": return "\\textbf";
         case "sub": inSub = true;
                     return "_{";
     }
 }
 
 function convert(s) {
-
+ 
     var extension = "";
-
+    
     if (inSub) {
         extension = "}";
         inSub = false;
     }
-
+    
     if (!inEquation) {
         extension+=" ";
     }
@@ -216,12 +214,15 @@ function convert(s) {
 
 function isReserved(s) {
     
-    if (s.indexOf("equation") > -1)
+    /*if (s == "equation" || s == "equations")
         return true;
+    else if (s == "value")
+        return true;*/
     
     switch(s) {
         case "line": return true;
         case "equation": return true;
+        case "equations": return true;
         case "page": return true;
         case "italics": return true;
         case "italicized": return true;
@@ -243,6 +244,7 @@ function convertText(text) {
     var words = [];
 
     var convertedText = "\\\documentclass{article}" +
+        "\\usepackage[margin=1.0in]{geometry}" +
         "\\begin{document}" +
         "\\title{(Title)}" +
         "\\\author{(Author)}" +
@@ -252,41 +254,24 @@ function convertText(text) {
         "\\newpage" +
         "\\section{Parametrics and Polar Coordinates}" +
         "\\newline ";
-
-    var spaces = countSpaces(text);
-
-    for (var i = 0; i < spaces+1; i++) {
-
-        var append = false;
-<<<<<<< HEAD
+    
+    var words = text.split(" ");
+    
+    for (var i=0; i< words.length; i++) {
         
-        var tmp;
-        
-=======
-
->>>>>>> origin/master
-        // keywords
-        console.log("tmp: "+tmp);
-        if (tmp == "new" || tmp == "end" || tmp == "and" || tmp == "absolute") {
-            append = true;
+        var currentWord = words[i];
+        if (currentWord == "new" || currentWord == "end" || currentWord == "and" || currentWord == "absolute") {
+            if(i < words.length - 1 && isReserved(words[i+1])) {
+                words[i] = words[i] + words[i+1];
+            }
+        }       
+    }
+    
+    for (var i=0; i< words.length; i++) {
+        if(isReserved(words[i])){
+            words.splice(i, 1);
+            i--;
         }
-
-        tmp = "";
-        if (text.indexOf(" ") < 0)
-            tmp = text;
-        else
-            tmp = [text.substring(0,text.indexOf(" "))];
-        
-        if (isReserved(tmp))
-            console.log("tmp: "+tmp+" reserved");
-        
-        if (append && isReserved(tmp)) {
-            console.log("words[i-1]: "+words[i-1]);
-            words[i-1] = words[i-1]+tmp;
-            console.log("words[i-1]: "+words[i-1]);
-        } else
-            words = words.concat(tmp);
-        text = text.substring(text.indexOf(" ")+1);
     }
 
     resetInputTypes();
@@ -296,6 +281,7 @@ function convertText(text) {
     }
     
     convertedText+="\\end{document}";
+    alert(convertedText);
 
     compileLaTeX(convertedText);
     

@@ -4,12 +4,12 @@ function compileLaTeX(latex_code) {
   editor.navigateFileEnd();
   editor.selectAll();
   var latex_text = editor.getCopyText();
-  alert(latex_text);
+  //alert(latex_text);
   //make call to php file
   $.ajax({
     url: 'http://ramvellanki.com/s2l/tex/createFile.php',
     type: 'POST',
-    data: { latex: latex_text },
+    data: { latex: latex_code },
     success: function(data) {
       //compile to LaTeX using this API
       $('#pdf').empty();
