@@ -6,9 +6,48 @@
     <script type="text/javascript" src="js/speech.js"></script>
   </head>
   <body>
+    <a href="#" onclick="start()"><img src="img/mic.png" /></a>
+    <a href="#" onclick-"stop()">Stop Mic</a>
+    <textarea id="textarea"></textarea>
     <div id="pdf"></div>
   </body>
   <script type="text/javascript">
-    convertText("fdsa");
+    //convertText("fdsa");
+
+    var recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en";
+
+    function start() {
+      alert("start");
+      recognition.start();
+    }
+
+    function stop() {
+      alert("stop");
+      recognition.stop();
+    }
+
+    recognition.onresult = function (event) {
+      // Calculating and saving the cursor position where the text will be displayed
+      var pos = textArea.getCursorPosition() - interimResult.length;
+      // Deleting an interim result from the textArea field
+      textArea.val(textArea.val().replace(interimResult, ''));
+      interimResult = '';
+      // Restoring the cursor position
+      textArea.setCursorPosition(pos);
+      for (var i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+            insertAtCaret('textarea', event.results[i][0].transcript);
+        } else {
+            // Outputting the interim result to the text field and adding
+            // an interim result marker - 0-length space
+            insertAtCaret('textarea', event.results[i][0].transcript + '\u200B');
+            interimResult += event.results[i][0].transcript + '\u200B';
+        }
+      }
+    };
+
   </script>
 </html>
