@@ -2,16 +2,16 @@
 var inEquation = false;
 
 function countSpaces(s) {
-    
+
     var count = 0;
-    
+
     for (var i = 0; i < s.length; i++) {
         if (s.charAt(i) == " ")
             count++;
     }
-    
+
     return count;
-    
+
 }
 
 function isNumber(s) {
@@ -19,28 +19,28 @@ function isNumber(s) {
 }
 
 function isVariable(s) {
-    
+
     if (s.length == 1 && s.match(/^[a-zA-Z]/))
         return true;
-    
+
     if (s == "ex" || s == "why")
         return true;
-    
+
     return false;
-    
+
 }
 
 function convertVariable(s) {
- 
-    
+
+
     if (s.length == 1 && s.match(/^[a-zA-Z]/))
         return s;
-    
+
     switch (s) {
         case "ex": return "x";
         case "why": return "y";
     }
-    
+
 }
 
 function isOperator(s) {
@@ -71,7 +71,7 @@ function convertOperator(s) {
         case "multiplied": return "*";
         case "over": return "/";
         case "divided": return "/";
-        case "by": return "/";    
+        case "by": return "/";
     }
 }
 
@@ -106,7 +106,7 @@ function convertCommand(s) {
 }
 
 function convert(s) {
- 
+
     if (isNumber(s)) {
         return s+" ";
     } else if (isVariable(s)) {
@@ -118,13 +118,13 @@ function convert(s) {
     } else {
         return s;
     }
-    
+
 }
 
 function convertText(text) {
-    
+
     var words = [];
-    
+
     var convertedText = "\\\documentclass{article}" +
         "\\begin{document}" +
         "\\title{MCLA Concise Review}" +
@@ -135,16 +135,16 @@ function convertText(text) {
         "\\newpage" +
         "\\section{Parametrics and Polar Coordinates}" +
         "\\newline ";
-    
+
     var spaces = countSpaces(text);
-    
+
     for (var i = 0; i < spaces+1; i++) {
-        
+
         var append = false;
-        
+
         if (tmp == "new" || tmp == "end" || tmp == "and")
             append = true;
-        
+
         var tmp = "";
         if (text.indexOf(" ") < 0)
             tmp = text;
@@ -156,15 +156,15 @@ function convertText(text) {
             words = words.concat(tmp);
         text = text.substring(text.indexOf(" ")+1);
     }
-    
+
     inEquation = false;
-    
+
     for (var i = 0; i < words.length; i++) {
         convertedText+=convert(words[i]);
     }
-    
+
     convertedText+="\\end{document}";
-        
+
         /*"\\\documentclass{article}" +
         "\\begin{document}" +
         "\\title{MCLA Concise Review}" +
@@ -178,5 +178,23 @@ function convertText(text) {
         ;*/
 
     compileLaTeX(convertedText);
+
+}
+
+function addToLatexEditor(text, type) {
+  var editor = ace.edit("editor");
+  editor.navigateFileEnd();
+
+  if(type == "title"){
+    if(text.length > 0)
+      text = "\\title{"+text+"}";
+  } else if (type == "author"){
+    if(text.length > 0)
+      text = "\\author{"+text+"}";
+  } else if (type == "date"){
+    if(text.length > 0)
+      text = "\\date{"+text+"}";
+  }
+  editor.insert(text+"\n");
 
 }
