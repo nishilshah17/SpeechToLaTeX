@@ -238,7 +238,7 @@ function convertText(text) {
 
     var words = [];
 
-    var convertedText = "\\\documentclass{article}" +
+    /*var convertedText = "\\\documentclass{article}" +
         "\\begin{document}" +
         "\\title{(Title)}" +
         "\\\author{(Author)}" +
@@ -247,7 +247,7 @@ function convertText(text) {
         "\\tableofcontents" +
         "\\newpage" +
         "\\section{Parametrics and Polar Coordinates}" +
-        "\\newline ";
+        "\\newline ";*/
 
     var spaces = countSpaces(text);
 
@@ -278,6 +278,21 @@ function convertText(text) {
     }
 
     compileLaTeX(convertedText);
+    addToLatexEditor("\\end{document}", null)
+
+        /*"\\\documentclass{article}" +
+        "\\begin{document}" +
+        "\\title{MCLA Concise Review}" +
+        "\\\author{Ram Vellanki, Manoaj Kandiakounder, Pranav Marupudi, Jintao Hang}" +
+        "\\date{June 2014}" +
+        "\\maketitle" +
+        "\\tableofcontents" +
+        "\\newpage" +
+        "\\section{Parametrics and Polar Coordinates}" +
+        "\\end{document}"
+        ;*/
+
+    //compileLaTeX();
 
 }
 
