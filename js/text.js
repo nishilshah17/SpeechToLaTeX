@@ -12,11 +12,11 @@ function countSpaces(s) {
 }
 
 function isNumber(s) {
-    return !(s.contains([a-zA-Z]))
+    return !(s.match(/^[a-zA-Z]/))
 }
 
 function isVariable(s) {
-    return (s.length == 1 && s.match([a-zA-Z]));   
+    return (s.length == 1 && s.match(/^[a-zA-Z]/));   
 }
 
 function convertOperator(s) {
@@ -26,8 +26,8 @@ function convertOperator(s) {
         case "added": return "+";
         case "minus": return "-";
         case "subtracted": return "-";
-        case "times": return "x";
-        case "multiplied": return "x";
+        case "times": return "*";
+        case "multiplied": return "*";
         case "over": return "/";
         case "divided": return "/";
         case "by": return "/";    
@@ -86,25 +86,36 @@ function convert(s) {
 
 function convertText(text) {
 
-    text = "x plus y equals 3";
+    //text = "x plus y equals 3";
     
     var words = [];
     
-    var convertedText = "\\begin{document}" +
+    var convertedText = "\\\documentclass{article}" +
+        "\\begin{document}" +
         "\\title{MCLA Concise Review}" +
         "\\\author{Ram Vellanki, Manoaj Kandiakounder, Pranav Marupudi, Jintao Hang}" +
         "\\date{June 2014}" +
         "\\maketitle" +
         "\\tableofcontents" +
         "\\newpage" +
-        "\\section{Parametrics and Polar Coordinates" +
-        "\\newline";
-
-    for (var i = 0; i < countSpaces(text); i++) {
-        var tmp = [text.substring(0,text.indexOf(" "))]
+        "\\section{Parametrics and Polar Coordinates}" +
+        "\\newline ";
+    
+    var spaces = countSpaces(text);
+    
+    for (var i = 0; i < spaces+1; i++) {
+        var tmp = "";
+        if (text.indexOf(" ") < 0)
+            tmp = text;
+        else
+            tmp = [text.substring(0,text.indexOf(" "))];
+        console.log("tmp: "+tmp);
         words = words.concat(tmp);
         text = text.substring(text.indexOf(" ")+1);
+        console.log("text: "+text);
     }
+    
+    console.log(words);
     
     for (var i = 0; i < words.length; i++) {
         convertedText+=convert(words[i]);
