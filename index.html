@@ -5,9 +5,10 @@
     <script type="text/javascript" src="js/compile.js"></script>
     <script type="text/javascript" src="js/text.js"></script>
   </head>
-  <body onload="toggleOverlay()">
+  <!--<body onload="toggleOverlay()">-->
+  <body>
 
-    <div id="overlay"></div>
+    <!--<div id="overlay"></div>
     <div id="specialBox">
       <h1 align="center">Speech To LaTeX</h1>
       <h3 align="center">New Document</h3>
@@ -17,7 +18,7 @@
       <div align="center"><input type="date" id="date" /></div><br>
       <div align="center"><button onmousedown="toggleOverlay()">Create Document</button></div>
     </div>
-    <div id="wrapper">
+    <div id="wrapper">-->
       <a href="#" onclick="start()"><img src="img/mic.png" /></a>
       <a href="#" onclick="stop()">Stop Mic</a>
       <a href="#" onclick="handleSpeech()">Compile</a>
@@ -26,7 +27,7 @@
         <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
       </div>
       <div id="pdf"></div>
-    </div>
+    <!--</div>-->
   </body>
   <script type="text/javascript">
 
@@ -85,7 +86,7 @@
       interim_span.innerHTML = linebreak(interim_transcript);
     };
 
-    function toggleOverlay(){
+    /*function toggleOverlay(){
     	var overlay = document.getElementById('overlay');
     	var specialBox = document.getElementById('specialBox');
     	overlay.style.opacity = .8;
@@ -96,7 +97,7 @@
     		overlay.style.display = "block";
     		specialBox.style.display = "block";
     	}
-    }
+    }*/
 
   </script>
 </html>
