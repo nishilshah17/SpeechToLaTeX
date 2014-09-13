@@ -8,6 +8,7 @@ function compileLaTeX(latex_code) {
     type: 'POST',
     data: { latex: 'fjdsafdsa' },
     success: function(data) {
+      alert(data);
       $('#pdf').append("<iframe src='http://latex.aslushnikov.com/compile?url=http://ramvellanki.com/s2l/tex/"+data+"' style='width:718px; height:700px;' frameborder='0'></iframe>")
     },
     error: function(error) {
