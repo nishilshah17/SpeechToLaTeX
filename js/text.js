@@ -11,8 +11,11 @@ function convertText(text) {
         "\tableofcontents" +
         "%MC CHAPTER 1.................................................... $"+
         "\newpage" +
-        "\section{Parametrics and Polar Coordinates}"
+        "\section{Parametrics and Polar Coordinates}" +
+        "\end{document}"
         ;
+    
+    
     
     compileLaTeX(convertedText);
     
