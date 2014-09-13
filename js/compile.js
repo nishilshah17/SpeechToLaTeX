@@ -3,7 +3,7 @@ function compileLaTeX(latex_code) {
   //make call to php file
   $.ajax({
     url: 'http://ramvellanki.com/s2l/tex/createFile.php',
-    data: { 'latex_code': latex_code },
+    data: { latex: latex_code },
     success: function(data) {
       alert(data);
     },
