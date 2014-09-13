@@ -116,7 +116,7 @@ function convert(s) {
     } else if (isCommand(s)) {
         return convertCommand(s);
     } else {
-        return s+" ";
+        return s;
     }
 
 }
@@ -164,6 +164,18 @@ function convertText(text) {
     }
 
     convertedText+="\\end{document}";
+        
+        /*"\\\documentclass{article}" +
+        "\\begin{document}" +
+        "\\title{MCLA Concise Review}" +
+        "\\\author{Ram Vellanki, Manoaj Kandiakounder, Pranav Marupudi, Jintao Hang}" +
+        "\\date{June 2014}" +
+        "\\maketitle" +
+        "\\tableofcontents" +
+        "\\newpage" +
+        "\\section{Parametrics and Polar Coordinates}" +
+        "\\end{document}"
+        ;*/
 
     compileLaTeX(convertedText);
 
