@@ -7,27 +7,12 @@
   </head>
   <body>
     <a href="#" onclick="start()"><img src="img/mic.png" /></a>
-    <a href="#" onclick-"stop()">Stop Mic</a>
+    <a href="#" onclick="stop()">Stop Mic</a>
+    <a href="#" onclick="handleSpeech()">Compile</a>
     <textarea id="textarea"></textarea>
     <div id="pdf"></div>
   </body>
   <script type="text/javascript">
-    //convertText("fdsa");
-
-    var recognition = new webkitSpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = "en";
-
-    function start() {
-      alert("start");
-      recognition.start();
-    }
-
-    function stop() {
-      alert("stop");
-      recognition.stop();
-    }
 
 /*    recognition.onresult = function (event) {
       // Calculating and saving the cursor position where the text will be displayed
@@ -50,16 +35,5 @@
       }
     };
 */
-    recognition.onresult = function (event) {
-      for (var i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-              insertAtCaret('textarea', event.results[i][0].transcript);
-          }
-      }
-    }
-
-    function insertAtCaret(id, text) {
-      document.getElementById(id).value = text;
-    }
   </script>
 </html>
