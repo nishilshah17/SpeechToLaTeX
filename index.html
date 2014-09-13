@@ -8,10 +8,10 @@
     <script type="text/javascript" src="ace/ace.js"></script>
 
   </head>
-  <!--<body onload="toggleOverlay()">-->
+    <!--<body onload="toggleOverlay()">-->
   <body>
 
-    <!--<div id="overlay"></div>
+    <div id="overlay"></div>
     <div id="specialBox">
       <h1 align="center">Speech To LaTeX</h1>
       <h3 align="center">New Document</h3>
@@ -21,16 +21,15 @@
       <div align="center"><input type="date" id="date" /></div><br>
       <div align="center"><button onmousedown="submitInformation()">Create Document</button></div>
     </div>
-    <div id="wrapper">-->
+    <!--<div id="wrapper">-->
       <a href="#" onclick="start()"><img src="img/mic.png" /></a>
       <a href="#" onclick="stop()">Stop Mic</a>
       <a href="#" onclick="handleSpeech()">Compile</a>
-      <!--<textarea id="textarea"></textarea>-->
+
       <div id="results">
         <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
       </div>
-      <div id="editor">
-      </div>
+      <div id="editor"></div>
       <div id="pdf"></div>
     <!--</div>-->
   </body>
@@ -41,10 +40,10 @@
     editor.getSession().setMode("ace/mode/latex");
     editor.selectAll();
     editor.removeLines();
-    addToLatexEditor("\\\documentclass{article}\\begin{document}", null);
-    addToLatexEditor("\\\documentclass{article}\\begin{document}", null);
-    addToLatexEditor("\\\documentclass{article}\\begin{document}", null);
-    compileLaTeX(null);
+    addToLatexEditor("\\\documentclass{article}", null);
+    addToLatexEditor("\\usepackage[margin=1.0in]{geometry}", null)
+    addToLatexEditor("\\begin{document}", null);
+
 
     var final_transcript;
 
@@ -108,6 +107,7 @@
       addToLatexEditor(document.getElementById('title').value, 'title');
       addToLatexEditor(document.getElementById('author').value, 'author');
       addToLatexEditor(document.getElementById('date').value, 'date');
+      toggleOverlay();
 
     }
 
