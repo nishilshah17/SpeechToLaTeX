@@ -1,14 +1,14 @@
 function countSpaces(s) {
-
+    
     var count = 0;
-
+    
     for (var i = 0; i < s.length; i++) {
         if (s.charAt(i) == " ")
             count++;
     }
-
+    
     return count;
-
+    
 }
 
 function isNumber(s) {
@@ -32,7 +32,6 @@ function convertOperator(s) {
         case "divided": return "/";
         case "by": return "/";    
     }
-    
 }
 
 function isOperator(s) {
@@ -87,13 +86,8 @@ function convert(s) {
 
 function convertText(text) {
 
-<<<<<<< HEAD
     text = "x plus y equals 3";
     
-=======
-    text = "x plus y equals three";
-
->>>>>>> origin/master
     var words = [];
     
     var convertedText = "\\begin{document}" +
@@ -103,7 +97,7 @@ function convertText(text) {
         "\\maketitle" +
         "\\tableofcontents" +
         "\\newpage" +
-        "\\section{Parametrics and Polar Coordinates +
+        "\\section{Parametrics and Polar Coordinates" +
         "\\newline";
 
     for (var i = 0; i < countSpaces(text); i++) {
@@ -111,7 +105,6 @@ function convertText(text) {
         words = words.concat(tmp);
         text = text.substring(text.indexOf(" ")+1);
     }
-<<<<<<< HEAD
     
     for (var i = 0; i < words.length; i++) {
         convertedText+=convert(words[i]);
@@ -120,12 +113,6 @@ function convertText(text) {
     convertedText+="\\end{document}";
         
         /*"\\\documentclass{article}" +
-=======
-
-    var convertedText;
-
-    convertedText = "\\\documentclass{article}" +
->>>>>>> origin/master
         "\\begin{document}" +
         "\\title{MCLA Concise Review}" +
         "\\\author{Ram Vellanki, Manoaj Kandiakounder, Pranav Marupudi, Jintao Hang}" +
