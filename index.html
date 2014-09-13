@@ -3,7 +3,6 @@
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/compile.js"></script>
     <script type="text/javascript" src="js/text.js"></script>
-    <script type="text/javascript" src="js/speech.js"></script>
   </head>
   <body>
     <a href="#" onclick="start()"><img src="img/mic.png" /></a>
@@ -13,6 +12,41 @@
     <div id="pdf"></div>
   </body>
   <script type="text/javascript">
+
+    var speech;
+
+    var recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en";
+
+    function start() {
+      speech = "";
+      recognition.start();
+    }
+
+    function stop() {
+      recognition.stop();
+    }
+
+    recognition.onresult = function (event) {
+      for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+              var text = event.results[i][0].transcript;
+              insertAtCaret('textarea', text);
+              speech+= text;
+          }
+      }
+    }
+
+    function insertAtCaret(id, text) {
+      document.getElementById(id).value = text;
+    }
+
+    function handleSpeech() {
+      convertText(speech);
+    }
+
 
 /*    recognition.onresult = function (event) {
       // Calculating and saving the cursor position where the text will be displayed
