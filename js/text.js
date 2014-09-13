@@ -3,14 +3,14 @@ function convertText(text) {
     var convertedText;
 
     convertedText = "\documentclass{article}" +
-        "\begin{document}" +
-        "\title{MCLA Concise Review}" +
+        "\\begin{document}" +
+        "\\title{MCLA Concise Review}" +
         "\author{Ram Vellanki, Manoaj Kandiakounder, Pranav Marupudi, Jintao Hang}" +
         "\date{June 2014}" +
         "\maketitle" +
-        "\tableofcontents" +
+        "\\tableofcontents" +
         "%MC CHAPTER 1.................................................... $"+
-        "\newpage" +
+        "\\newpage" +
         "\section{Parametrics and Polar Coordinates}" +
         "\end{document}"
         ;
