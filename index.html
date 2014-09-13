@@ -31,6 +31,7 @@
 
     recognition.onresult = function (event) {
       // Calculating and saving the cursor position where the text will be displayed
+      textArea = document.getElementById('textarea');
       var pos = textArea.getCursorPosition() - interimResult.length;
       // Deleting an interim result from the textArea field
       textArea.val(textArea.val().replace(interimResult, ''));
