@@ -1,7 +1,7 @@
 function convertText(text) {
-    
+
     var convertedText;
-    
+
     convertedText = "\documentclass{article}" +
         "\begin{document}" +
         "\title{MCLA Concise Review}" +
@@ -13,7 +13,7 @@ function convertText(text) {
         "\newpage" +
         "\section{Parametrics and Polar Coordinates}"
         ;
-    
+
     compileLaTeX(convertedText);
-    
+
 }
