@@ -23,7 +23,7 @@ function isVariable(s) {
 
     if (s.length == 1 && s.match(/^[a-zA-Z]/))
         return true;
-    
+
     switch (s) {
         case "ex": return true;
         case "why": return true;
@@ -152,7 +152,7 @@ function isCommand(s) {
 }
 
 function convertCommand(s) {
-    
+
     if (inEquation) {
         switch (s) {
             case "endequation": inEquation = false;
@@ -161,7 +161,7 @@ function convertCommand(s) {
                                 return "$";
         }
     }
-    
+
     if (inAbsolute) {
         switch(s) {
             case "end": inAbsolute = false;
@@ -170,7 +170,7 @@ function convertCommand(s) {
                         return "\\right|";
         }
     }
-    
+
     switch(s) {
         case "newline": return "\\newline";
         case "newpage": return "\\newpage";
@@ -186,14 +186,14 @@ function convertCommand(s) {
 }
 
 function convert(s) {
- 
+
     var extension = "";
-    
+
     if (inSub) {
         extension = "}";
         inSub = false;
     }
-    
+
     if (!inEquation) {
         extension+=" ";
     }
@@ -213,12 +213,12 @@ function convert(s) {
 }
 
 function isReserved(s) {
-    
+
     /*if (s == "equation" || s == "equations")
         return true;
     else if (s == "value")
         return true;*/
-    
+
     switch(s) {
         case "line": return true;
         case "equation": return true;
@@ -245,28 +245,20 @@ function convertText(text) {
 
     var convertedText = "\\\documentclass{article}" +
         "\\usepackage[margin=1.0in]{geometry}" +
-        "\\begin{document}" +
-        "\\title{(Title)}" +
-        "\\\author{(Author)}" +
-        "\\date{(Date)}" +
-        "\\maketitle" +
-        "\\tableofcontents" +
-        "\\newpage" +
-        "\\section{Parametrics and Polar Coordinates}" +
-        "\\newline ";
-    
+        "\\begin{document}";
+
     var words = text.split(" ");
-    
+
     for (var i=0; i< words.length; i++) {
-        
+
         var currentWord = words[i];
         if (currentWord == "new" || currentWord == "end" || currentWord == "and" || currentWord == "absolute") {
             if(i < words.length - 1 && isReserved(words[i+1])) {
                 words[i] = words[i] + words[i+1];
             }
-        }       
+        }
     }
-    
+
     for (var i=0; i< words.length; i++) {
         if(isReserved(words[i])){
             words.splice(i, 1);
@@ -279,12 +271,12 @@ function convertText(text) {
     for (var i = 0; i < words.length; i++) {
         convertedText+=convert(words[i]);
     }
-    
+
     convertedText+="\\end{document}";
     alert(convertedText);
 
     compileLaTeX(convertedText);
-    
+
     //addToLatexEditor("\\end{document}", null)
 
 }
