@@ -1,6 +1,6 @@
 <?php
   $latex_code = $_POST['latex_code'];
-
+  echo $latex_code;
   $date = date_create();
   $unix = date_timestamp_get($date);
 
