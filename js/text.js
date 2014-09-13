@@ -134,7 +134,7 @@ function convertText(text) {
         "\\tableofcontents" +
         "\\newpage" +
         "\\section{Parametrics and Polar Coordinates}" +
-        "\\newline";
+        "\\newline ";
     
     var spaces = countSpaces(text);
     
