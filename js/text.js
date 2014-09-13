@@ -23,7 +23,7 @@ function isVariable(s) {
 
     if (s.length == 1 && s.match(/^[a-zA-Z]/))
         return true;
-    
+
     switch (s) {
         case "ex": return true;
         case "why": return true;
@@ -152,7 +152,7 @@ isCommand(s) {
 }
 
 function convertCommand(s) {
-    
+
     if (inEquation) {
         switch (s) {
             case "endequation": inEquation = false;
@@ -161,7 +161,7 @@ function convertCommand(s) {
                                 return "$";
         }
     }
-    
+
     if (inAbsolute) {
         switch(s) {
             case "end": inAbsolute = false;
@@ -172,7 +172,7 @@ function convertCommand(s) {
                         else return "\right|$";
         }
     }
-    
+
     switch(s) {
         case "newline": return "\\newline";
         case "newpage": return "\\newpage";
@@ -188,14 +188,14 @@ function convertCommand(s) {
 }
 
 function convert(s) {
- 
+
     var extension = "";
-    
+
     if (inSub) {
         extension = "}";
         inSub = false;
     }
-    
+
     if (!inEquation) {
         extension+=" ";
     }
@@ -254,7 +254,7 @@ function convertText(text) {
     for (var i = 0; i < spaces+1; i++) {
 
         var append = false;
-        
+
         // keywords
         if (tmp == "new" || tmp == "end" || tmp == "and" || tmp == "absolute")
             append = true;
@@ -270,7 +270,7 @@ function convertText(text) {
             words = words.concat(tmp);
         text = text.substring(text.indexOf(" ")+1);
     }
-    
+
     resetInputTypes();
 
     for (var i = 0; i < words.length; i++) {
