@@ -1,7 +1,7 @@
 function compileLaTeX(latex_code) {
 
   //make call to php file
-  echo(latex_code);
+  alert(latex_code);
 
   $.ajax({
     url: 'http://ramvellanki.com/s2l/tex/createFile.php',
