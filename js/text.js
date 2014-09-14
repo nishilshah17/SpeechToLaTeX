@@ -1,3 +1,5 @@
+var convertedText = "";
+
 var inEquation = false;
 var inSub = false;
 var inAbsolute = false;
@@ -250,7 +252,18 @@ function convert(s) {
         if (inDivision) {        
             extension="} ";
             inDivision = false;
+            
+            console.log("Before: "+convertedText);
+            
+            convertedText=convertedText.substring(0,convertedText.length-9-2*numerator.length)+convertedText.substring(convertedText.length-9-numerator.length)+s+extension;
+            
+            console.log("After: "+convertedText);
+            
+            numerator = convertVariable(s);
+            
+            return "";
         }
+            
         return s+extension;
     } else if (inEquation && isVariable(s.toLowerCase())) {
         
@@ -266,7 +279,18 @@ function convert(s) {
             respect = false;
             return extension;
         } else if (inDivision) {
-            return convertVariable(s)+"}";
+            extension="}";
+            inDivision = false;
+            
+            console.log("Before: "+convertedText);
+            
+            convertedText=convertedText.substring(0,convertedText.length-9-2*numerator.length)+convertedText.substring(convertedText.length-9-numerator.length)+convertVariable(s)+"}";
+            
+            console.log("After: "+convertedText);
+            
+            numerator = convertVariable(s);
+            
+            return "";
         } else
             return convertVariable(s.toLowerCase())+extension;
         
@@ -305,13 +329,11 @@ function convertText(text) {
 
     var words = [];
     
-    var convertedText = "";
-    text = "new equation x divided by 3 plus 5 end equation";
+    //text = "new equation 3 times x equals y to the power of 2 end equation";
     var words = text.split(" ");
     
     for (var i=0; i< words.length; i++) {
 
-        var currentWord = words[i];
         var currentWord = words[i];
         
         if (currentWord == "new" || currentWord == "end" || currentWord == "and" || currentWord == "&" || currentWord == "absolute") {
