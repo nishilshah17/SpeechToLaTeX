@@ -1,19 +1,7 @@
 var inEquation = false;
 var inSub = false;
 var inAbsolute = false;
-
-function countSpaces(s) {
-
-    var count = 0;
-
-    for (var i = 0; i < s.length; i++) {
-        if (s.charAt(i) == " ")
-            count++;
-    }
-
-    return count;
-
-}
+var inSuper = false;
 
 function isNumber(s) {
     return !(s.match(/^[a-zA-Z]/))
@@ -41,15 +29,10 @@ function isVariable(s) {
         case "mu": return true;
     }
 
-    if (s == "ex" || s == "why")
-        return true;
-
     return false;
-
 }
 
 function convertVariable(s) {
-
 
     if (s.length == 1 && s.match(/^[a-zA-Z]/))
         return s;
@@ -82,27 +65,36 @@ function convertVariable(s) {
         case "psi": return "\\psi";
         case "omega": return "\\omega";
     }
-
+    return s;
 }
 
 function isOperator(s) {
     switch (s) {
         case "equals": return true;
+        case "+": return true;
         case "plus": return true;
         case "added": return true;
+        case "-": return true;
         case "minus": return true;
         case "subtracted": return true;
+        case "x": return true;
         case "times": return true;
         case "multiplied": return true;
         case "over": return true;
         case "divided": return true;
         case "by": return true;
-        case "power": return true;
-        case "absolutevalue": return true;
         case "factorial": return true;
         case "integral": return true;
         case "derivative": return true;
+        case ".": return true;
+        case "dot": return true;
+        case "cross": return true;
+        case "absolutevalue": return true;
+        case "over": return true;
+        case "divided": return true;
+        case "by": return true;
     }
+    return false;
 }
 
 function convertOperator(s) {
@@ -123,6 +115,7 @@ function convertOperator(s) {
         case "factorial": return "!";
         case "integral": return "\\integral";
         case "derivative": return "";                           // TODO
+        case ".": return "\\cdot";
         case "dot": return "\\cdot";
         case "cross": return "\\times";
         case "absolutevalue":   inAbsolute = true;
@@ -131,6 +124,8 @@ function convertOperator(s) {
         case "divided": return "/";
         case "by": return "/";
     }
+    
+    return s;
 }
 
 function isCommand(s) {
@@ -139,16 +134,20 @@ function isCommand(s) {
         case "newline": return true;
         case "newpage": return true;
         case "newequation": return true;
-        case "endequation": return true;
-        case "andequation": return true;
-        case "endfile": return true;
-        case "and": return true;
+        case "endequation": if (inEquation) return true;
+                            else return false;
+        case "andequation": if (inEquation) return true;
+                            else return false;
+        case "and": if (inAbsolute) return true;
+                    return false;
         case "italics": return true;
         case "italicized": return true;
         case "bold": return true;
         case "bolded": return true;
         case "sub": return true;
     }
+    
+    return s;
 }
 
 function convertCommand(s) {
@@ -183,6 +182,9 @@ function convertCommand(s) {
         case "sub": inSub = true;
                     return "_{";
     }
+    
+    return s;
+    
 }
 
 function convert(s) {
@@ -270,6 +272,8 @@ function convertText(text) {
 
     for (var i = 0; i < words.length; i++) {
         convertedText+=convert(words[i]);
+        if (convert(words[i]) == "\\newline")
+            convertedText+="\n";
     }
 
     convertedText+="\\end{document}";
