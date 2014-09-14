@@ -2,9 +2,13 @@ var inEquation = false;
 var inSub = false;
 var inAbsolute = false;
 var inSuper = false;
+var inVector = false;
+var inIntegral = false; var respect = false;
+var inParentheses = false;
+var inDivision = false; var numerator = "";
 
 function isNumber(s) {
-    return !(s.match(/^[a-zA-Z]/))
+    return !(s.match(/^[a-zA-Z]/));
 }
 
 function isVariable(s) {
@@ -33,10 +37,6 @@ function isVariable(s) {
 }
 
 function convertVariable(s) {
-
-    if (s.length == 1 && s.match(/^[a-zA-Z]/))
-        return s;
-
     switch (s) {
         case "ex": return "x";
         case "why": return "y";
@@ -82,17 +82,26 @@ function isOperator(s) {
         case "multiplied": return true;
         case "over": return true;
         case "divided": return true;
-        case "by": return true;
         case "factorial": return true;
         case "integral": return true;
+        case "respect": if (inIntegral) return true;
         case "derivative": return true;
         case ".": return true;
         case "dot": return true;
         case "cross": return true;
         case "absolutevalue": return true;
-        case "over": return true;
-        case "divided": return true;
-        case "by": return true;
+        case "vector": return true;
+        case "power": return true;
+        case "sin": return true;
+        case "sign": return true;
+        case "sine": return true;
+        case "cos": return true;
+        case "cosine": return true;
+        case "tan": return true;
+        case "tangent": return true;
+        case "sub": return true;
+        case "super": return true;
+        case "space": return true;
     }
     return false;
 }
@@ -106,25 +115,40 @@ function convertOperator(s) {
         case "-": return "-";
         case "minus": return "-";
         case "subtracted": return "-";
-        case "x": return "";
-        case "times": return "";
-        case "multiplied": return "*";
-        case "over": return "/";                                // TODO
-        case "divided": return "/";                             // TODO
-        case "by": return "/";                                  // TODO
+        case "x": return "";                                    // TODO
+        case "times": return "";                                // TODO
+        case "multiplied": return "";                           // TODO
+        case "over":    inDivision = true;
+                        return "\\dfrac{"+numerator+"}{";
+        case "divided": inDivision = true;
+                        return "\\dfrac{"+numerator+"}{";
         case "factorial": return "!";
-        case "integral": return "\\integral";
+        case "integral": inIntegral = true; 
+                         return "\\int ";
+        case "respect": if (inIntegral) respect=true;
+                        return "";
         case "derivative": return "";                           // TODO
-        case ".": return "\\cdot";
-        case "dot": return "\\cdot";
-        case "cross": return "\\times";
+        case ".": return "\\cdot ";                              // TODO
+        case "dot": return "\\cdot ";
+        case "cross": return "\\times ";
         case "absolutevalue":   inAbsolute = true;
                                 return "\\left|";
-        case "over": return "/";
-        case "divided": return "/";
-        case "by": return "/";
+        case "vector": inVector = true;
+                       return "\\vec{";
+        case "sin": return "\\sin ";
+        case "sign": return "\\sin ";
+        case "sine": return "\\sin ";
+        case "cos": return "\\cos ";
+        case "cosine": return "\\cos ";
+        case "tan": return "\\tan ";
+        case "tangent": return "\\tan ";
+        case "sub": inSub = true;
+                    return "_{";
+        case "power": return convertOperator("super");
+        case "super": inSuper = true;
+                      return "^{";
+        case "space": return "~";
     }
-    
     return s;
 }
 
@@ -138,16 +162,17 @@ function isCommand(s) {
                             else return false;
         case "andequation": if (inEquation) return true;
                             else return false;
-        case "and": if (inAbsolute) return true;
-                    return false;
         case "italics": return true;
         case "italicized": return true;
         case "bold": return true;
         case "bolded": return true;
-        case "sub": return true;
+        case "open": return true;
+        case "opened": return true;
+        case "close": return true;
+        case "clothes": return true;
+        case "closed": return true;
     }
-    
-    return s;
+    return false;
 }
 
 function convertCommand(s) {
@@ -159,15 +184,38 @@ function convertCommand(s) {
             case "andequation": inEquation = false;
                                 return "$";
         }
-    }
-
-    if (inAbsolute) {
-        switch(s) {
-            case "end": inAbsolute = false;
-                        return "\\right|";
-            case "and": inAbsolute = false;
-                        return "\\right|";
+     
+        if (inAbsolute) {
+            switch(s) {
+                case "close":   inAbsolute = false;
+                                return "\\right|";
+                case "clothes": inAbsolute = false;
+                                return "\\right|";
+                case "closed":  inAbsolute = false;
+                                return "\\right|";
+            }
         }
+        
+        if (!inParentheses) {
+            switch(s) {
+                case "open":    inParentheses = true;
+                                return "(";
+                case "opened":  inParentheses = true;
+                                return "(";
+            }
+        }
+        
+        if (inParentheses) {
+            switch(s) {
+                case "close":   inParentheses = false;
+                                return ")";
+                case "clothes": inParentheses = false;
+                                return ")";
+                case "closed":  inParentheses = false;
+                                return ")";
+            }
+        }
+        
     }
 
     switch(s) {
@@ -179,8 +227,6 @@ function convertCommand(s) {
         case "italicized": return "\\textit";
         case "bold": return "\\textbf";
         case "bolded": return "\\textbf";
-        case "sub": inSub = true;
-                    return "_{";
     }
     
     return s;
@@ -191,36 +237,50 @@ function convert(s) {
 
     var extension = "";
 
-    if (inSub) {
+    if (inVector) {
         extension = "}";
-        inSub = false;
+        inVector = false;
     }
-
+    
     if (!inEquation) {
-        extension+=" ";
+        extension=" ";
     }
 
     if (isNumber(s)) {
+        if (inDivision) {        
+            extension="} ";
+            inDivision = false;
+        }
         return s+extension;
     } else if (inEquation && isVariable(s.toLowerCase())) {
-        return convertVariable(s.toLowerCase())+extension;
+        
+        numerator = convertVariable(s.toLowerCase());
+        
+        if (inSub || inSuper) {
+            extension = "}";
+            inSub = false;
+            inSuper = false;
+            return convertVariable(s.toLowerCase())+extension;
+        } else if (respect) {
+            extension+="~d"+convertVariable(s.toLowerCase());
+            respect = false;
+            return extension;
+        } else if (inDivision) {
+            return convertVariable(s)+"}";
+        } else
+            return convertVariable(s.toLowerCase())+extension;
+        
     } else if (inEquation && isOperator(s.toLowerCase())) {
         return convertOperator(s.toLowerCase())+extension;
     } else if (isCommand(s.toLowerCase())) {
         return convertCommand(s.toLowerCase());
-    } else {
+    } else if (!inEquation) {
         return s+extension;
-    }
-
+    } else
+        return "";
 }
 
 function isReserved(s) {
-
-    /*if (s == "equation" || s == "equations")
-        return true;
-    else if (s == "value")
-        return true;*/
-
     switch(s) {
         case "line": return true;
         case "equation": return true;
@@ -244,17 +304,17 @@ function resetInputTypes() {
 function convertText(text) {
 
     var words = [];
-
-    var convertedText = "\\\documentclass{article}" +
-        "\\usepackage[margin=1.0in]{geometry}" +
-        "\\begin{document}";
-
+    
+    var convertedText = "";
+    text = "new equation x divided by 3 plus 5 end equation";
     var words = text.split(" ");
-
+    
     for (var i=0; i< words.length; i++) {
 
         var currentWord = words[i];
-        if (currentWord == "new" || currentWord == "end" || currentWord == "and" || currentWord == "absolute") {
+        var currentWord = words[i];
+        
+        if (currentWord == "new" || currentWord == "end" || currentWord == "and" || currentWord == "&" || currentWord == "absolute") {
             if(i < words.length - 1 && isReserved(words[i+1])) {
                 words[i] = words[i] + words[i+1];
             }
@@ -272,16 +332,13 @@ function convertText(text) {
 
     for (var i = 0; i < words.length; i++) {
         convertedText+=convert(words[i]);
-        if (convert(words[i]) == "\\newline")
-            convertedText+="\n";
+        //if (convert(words[i]) == "\\newline")
+            //convertedText+="\n";
     }
+    
+    addToLatexEditor(convertedText, "converted");
 
-    convertedText+="\\end{document}";
-    addToLatexEditor(convertedText);
-
-    compileLaTeX(convertedText);
-
-    //addToLatexEditor("\\end{document}", null);
+    compileLaTeX();
 
 }
 
@@ -292,13 +349,22 @@ function addToLatexEditor(text, type) {
   if(type == "title"){
     if(text.length > 0)
       text = "\\title{"+text+"}";
+    editor.insert(text+"\n");
   } else if (type == "author"){
     if(text.length > 0)
       text = "\\author{"+text+"}";
+    editor.insert(text+"\n");
   } else if (type == "date"){
     if(text.length > 0)
       text = "\\date{"+text+"}";
+    editor.insert(text+"\n");
+  } else if (type == "end") {
+      editor.insert(text);
+  } else if (type == "init") {
+      editor.insert(text+"\n");
+  } else {
+      editor.navigateLineStart();
+      editor.insert(text+"\n");
   }
-  editor.insert(text+"\n");
 
 }

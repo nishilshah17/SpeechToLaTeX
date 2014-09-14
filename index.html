@@ -40,11 +40,14 @@
     editor.getSession().setMode("ace/mode/latex");
     editor.selectAll();
     editor.removeLines();
-    addToLatexEditor("\\\documentclass{article}", null);
-    addToLatexEditor("\\usepackage[margin=1.0in]{geometry}", null)
-    addToLatexEditor("\\begin{document}", null);
+    addToLatexEditor("\\\documentclass{article}", "init");
+    addToLatexEditor("\\usepackage[margin=1.0in]{geometry}", "init")
+    addToLatexEditor("\\usepackage{amsmath}", "init");
+    addToLatexEditor("\\begin{document}", "init");
+    addToLatexEditor("\\end{document}", "end");
 
     var final_transcript;
+    var total_transcript;
 
     var recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
@@ -66,6 +69,7 @@
 
     function handleSpeech() {
       convertText(final_transcript);
+      final_transcript = "";
     }
 
     var two_line = /\n\n/g;
