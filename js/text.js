@@ -354,49 +354,51 @@ function resetInputTypes() {
 }
 
 function convertText(text) {
-
-    var words = [];
     
-    //text = "new equation x divided by 3 plus 5 end equation";
-    var words = text.split(" ");
-    
-    for (var i=0; i< words.length; i++) {
+    if(text == "" || text == null)
+        compileLaTeX();
+    else {
+        var words = [];
 
-        var currentWord = words[i];
-        
-        if (currentWord == "new" || currentWord == "end" || currentWord == "and" || currentWord == "&" || currentWord == "absolute") {
-            if(i < words.length - 1 && isReserved(words[i+1])) {
-                words[i] = words[i] + words[i+1];
+        //text = "new equation x divided by 3 plus 5 end equation";
+        var words = text.split(" ");
+
+        for (var i=0; i< words.length; i++) {
+
+            var currentWord = words[i];
+
+            if (currentWord == "new" || currentWord == "end" || currentWord == "and" || currentWord == "&" || currentWord == "absolute") {
+                if(i < words.length - 1 && isReserved(words[i+1])) {
+                    words[i] = words[i] + words[i+1];
+                }
             }
         }
-    }
 
-    for (var i=0; i< words.length; i++) {
-        if(isReserved(words[i])){
-            words.splice(i, 1);
-            i--;
+        for (var i=0; i< words.length; i++) {
+            if(isReserved(words[i])){
+                words.splice(i, 1);
+                i--;
+            }
         }
+
+        resetInputTypes();
+
+        for (var i = 0; i < words.length; i++) {
+            if(!inDivision)
+                convertedText+=convert(words[i]);
+        }
+
+        addToLatexEditor(convertedText, "converted");
+
+        compileLaTeX();
+
+        convertedText = "";
     }
-
-    resetInputTypes();
-
-    for (var i = 0; i < words.length; i++) {
-        if(!inDivision)
-            convertedText+=convert(words[i]);
-    }
-    
-    addToLatexEditor(convertedText, "converted");
-
-    compileLaTeX();
-    
-    convertedText = "";
-
 }
 
 function addToLatexEditor(text, type) {
   var editor = ace.edit("editor");
   editor.navigateFileEnd();
-    if(text != ""){
       if(type == "title"){
         if(text.length > 0)
           text = "\\title{"+text+"}";
@@ -417,6 +419,5 @@ function addToLatexEditor(text, type) {
           editor.navigateLineStart();
           editor.insert(text+"\n");
       }
-    }
 
 }

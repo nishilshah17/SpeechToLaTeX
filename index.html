@@ -2,39 +2,96 @@
   <head>
     <link rel="stylesheet" href="css/overlay.css" />
     <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/compile.js"></script>
     <script type="text/javascript" src="js/text.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
     <script type="text/javascript" src="ace/ace.js"></script>
 
   </head>
-    <!--<body onload="toggleOverlay()">-->
-  <body>
+<!-- <body onload="toggleOverlay()"> -->
+<body onload="triggerModal()">
+<div class="navbar navbar-default">
+  <button type="button" id="helpText" class="btn btn-lg btn-danger" data-toggle="Help" data-placement="bottom" title="How to use Speech2LaTeX" data-content="
+  Press the Microphone image and use the following syntax. To start a new equation say &#8220;New Equation&#8221;. To end an equation say &#8220;End Equation&#8221;.
+  To use parentheses, say open and close respectively. The rest is math lingo! For example &#8220;new equation x to the power of 2 end equation&#8221; would show up as
+   &#8220;x&sup2;&#8221;.
+  ">Help</button>
+  <div class="navbar-header">
+    <a class="navbar-brand" href="#">Speech2LaTeX</a>
+  </div>
+</div>
 
-    <div id="overlay"></div>
-    <div id="specialBox">
-      <h1 align="center">Speech To LaTeX</h1>
-      <h3 align="center">New Document</h3>
-      <br>
-      <div align="center"><input type="text" id="title" placeholder="Title" /></div><br>
-      <div align="center"><input type="text" id="author" placeholder="Author(s)" /></div><br>
-      <div align="center"><input type="date" id="date" /></div><br>
-      <div align="center"><button onmousedown="submitInformation()">Create Document</button></div>
+  <!-- Button trigger modal -->
+  <button id="trigger-modal" data-toggle="modal" data-target="#myModal"></button>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form class="form-horizontal" id="form-horizontal">
+            <fieldset>
+              <legend> SetUp Your LaTeX File. </legend>
+              <div class="form-group">
+                <!--<label for="inputEmail" class="col-lg-2 control-label"><br>Title</label>-->
+                <div class="required col-lg-10">
+                  <input type="text" class="form-control" id="title" placeholder="Please enter your title.">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <!--<label for="inputPassword" clas="col-lg-2" control-label><br>Author(s)</label>-->
+                <div class="required col-lg-10">
+                  <input type="text" class="form-control" id="author" placeholder="Please enter the creaters of the document">
+                </div>
+              </div>
+
+            <div class="form-group">
+                <div class="col-lg-10">
+                  <button class="btn btn-primary" onClick="submitInformation()" data-dismiss="modal">Enter</button>
+              </div>
+            </div>
+            </fieldset>
+          </form>
+        </div>
+        </div
+      </div>
     </div>
-    <!--<div id="wrapper">-->
-      <a href="#" onclick="start()"><img src="img/mic.png" /></a>
-      <a href="#" onclick="stop()">Stop Mic</a>
-      <a href="#" onclick="handleSpeech()">Compile</a>
-      <a href="#" onclick="clear()">Clear</a>
+  </div>
 
-      <div id="results">
-        <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
+    <div id="wrapper">
+      <a href="#" onclick="start()"><img src="img/mic.png" height="60px" width="60px"/></a>
+      <a href="#" class="btn-primary btn-lg" onclick="stop()">Stop Mic</a>
+      <a href="#" class="btn-primary btn-lg" onclick="handleSpeech()">Compile</a>
+      <a href="#" class="btn-primary btn-lg" onclick="clear()">Scrap</a>
+    </div>
+      <div id="textBody">
+          <br><br>
+        <span class="final" id="final_span"></span><span class="interim" id="interim_span"></span>
       </div>
       <div id="editor"></div>
       <div id="pdf"></div>
-    <!--</div>-->
+    <!-- </div> -->
   </body>
-  <script type="text/javascript">
+    
+  <script type="text/javascript">  
+    $('#trigger-modal').hide();
+
+    $( '#form-horizontal' ).on( 'keypress', function( e ) {
+        if( e.keyCode === 13 ) {
+            e.preventDefault();
+            $( this ).trigger( 'submit' );
+        }
+    } );
+
+    $('#helpText')
+   .popover()
+   .click(function(e) {
+       e.preventDefault();
+       $(this).focus();
+   });
 
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/xcode");
@@ -45,7 +102,6 @@
     addToLatexEditor("\\usepackage[margin=1.0in]{geometry}", "init")
     addToLatexEditor("\\usepackage{amsmath}", "init");
     addToLatexEditor("\\begin{document}", "init");
-    addToLatexEditor("\\end{document}", "end");
 
     var final_transcript;
 
@@ -93,33 +149,22 @@
       final_span.innerHTML = linebreak(final_transcript);
       interim_span.innerHTML = linebreak(interim_transcript);
     };
-
-    function toggleOverlay(){
-    	var overlay = document.getElementById('overlay');
-    	var specialBox = document.getElementById('specialBox');
-    	overlay.style.opacity = .8;
-    	if(overlay.style.display == "block"){
-    		overlay.style.display = "none";
-    		specialBox.style.display = "none";
-    	} else {
-    		overlay.style.display = "block";
-    		specialBox.style.display = "block";
-    	}
-    }
-
+      
+    function triggerModal() {
+      document.getElementById('trigger-modal').click();
+    }  
+      
     function submitInformation() {
       addToLatexEditor(document.getElementById('title').value, 'title');
       addToLatexEditor(document.getElementById('author').value, 'author');
-      addToLatexEditor(document.getElementById('date').value, 'date');
-      toggleOverlay();
-
+      //addToLatexEditor(document.getElementById('date').value, 'date');
+      addToLatexEditor("\\maketitle", "init");
+      addToLatexEditor("\\end{document}", "end");
     }
       
     function clear() {
         final_transcript = "";
         interim_transcript = "";
-        alert(final_span.innerHTML);
-        alert(interim_span.innerHTML);
         final_span.innerHTML = linebreak(final_transcript);
         interim_span.innerHTML = linebreak(interim_transcript);
     }
