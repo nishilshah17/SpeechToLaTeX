@@ -65,7 +65,7 @@
       <a href="#" onclick="start()"><img src="img/mic.png" height="60px" width="60px"/></a>
       <a href="#" class="btn-primary btn-lg" onclick="stop()">Stop Mic</a>
       <a href="#" class="btn-primary btn-lg" onclick="handleSpeech()">Compile</a>
-      <a href="#" class="btn-primary btn-lg" onclick="clear()">Scrap</a>
+      <a href="#" class="btn-primary btn-lg" id="scrap">Scrap</a>
     </div>
       <div id="textBody">
           <br><br>
@@ -122,6 +122,10 @@
     function insertAtCaret(id, text) {
       document.getElementById(id).value = text;
     }
+      
+    $(document).ready(function() {
+       $('#scrap').click(clear);  
+    });
 
     function handleSpeech() {
       convertText(final_transcript);

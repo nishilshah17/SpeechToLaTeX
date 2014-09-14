@@ -225,7 +225,7 @@ function convertCommand(s) {
     }
 
     switch(s) {
-        case "newline": return "\\newline";
+        case "newline": return "\\\newline";
         case "newpage": return "\\newpage";
         case "newequation": inEquation = true;
                             return "$";
