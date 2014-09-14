@@ -273,11 +273,11 @@ function convertText(text) {
     }
 
     convertedText+="\\end{document}";
-    alert(convertedText);
+    addToLatexEditor(convertedText);
 
     compileLaTeX(convertedText);
 
-    //addToLatexEditor("\\end{document}", null)
+    //addToLatexEditor("\\end{document}", null);
 
 }
 
