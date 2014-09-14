@@ -5,7 +5,7 @@ var inSub = false;
 var inAbsolute = false;
 var inSuper = false;
 var inVector = false;
-var inIntegral = false; var respect = false;
+var inIntegral = false; var respect = false; var definite1 = false; var definite2 = false; var integralVar = "";
 var inParentheses = false;
 var inDivision = false; var numerator = "";
 
@@ -162,7 +162,11 @@ function isCommand(s) {
         case "newequation": return true;
         case "endequation": if (inEquation) return true;
                             else return false;
+        case "endequations": if (inEquation) return true;
+                            else return false;
         case "andequation": if (inEquation) return true;
+                            else return false;
+        case "andequations": if (inEquation) return true;
                             else return false;
         case "italics": return true;
         case "italicized": return true;
@@ -238,10 +242,16 @@ function convertCommand(s) {
 function convert(s) {
 
     var extension = "";
-
+    
     if (inVector) {
         extension = "}";
         inVector = false;
+    }
+    
+    if (inIntegral) {
+        if (s == "from") {
+            definite1 = true;
+        }
     }
     
     if (!inEquation) {
@@ -262,6 +272,17 @@ function convert(s) {
             numerator = convertVariable(s);
             
             return "";
+        }
+        
+        if (definite1) {
+            definite1 = false;
+            definite2 = true;
+            return "_{"+s+"}";   
+        }
+        
+        if (definite2) {
+            definite2 = false;
+            return "^{"+s+"}";   
         }
             
         return s+extension;
@@ -291,6 +312,13 @@ function convert(s) {
             numerator = convertVariable(s);
             
             return "";
+        } else if (definite1) {
+            definite1 = false;
+            definite2 = true;
+            return "_{"+convertVariable(s.toLowerCase())+"}";
+        } else if (definite2) {
+            definite2 = false;
+            return "^{"+convertVariable(s.toLowerCase())+"}";   
         } else
             return convertVariable(s.toLowerCase())+extension;
         
@@ -329,7 +357,7 @@ function convertText(text) {
 
     var words = [];
     
-    //text = "new equation 3 times x equals y to the power of 2 end equation";
+    //text = "new equation x divided by 3 plus 5 end equation";
     var words = text.split(" ");
     
     for (var i=0; i< words.length; i++) {
@@ -353,40 +381,42 @@ function convertText(text) {
     resetInputTypes();
 
     for (var i = 0; i < words.length; i++) {
-        convertedText+=convert(words[i]);
-        //if (convert(words[i]) == "\\newline")
-            //convertedText+="\n";
+        if(!inDivision)
+            convertedText+=convert(words[i]);
     }
     
     addToLatexEditor(convertedText, "converted");
 
     compileLaTeX();
+    
+    convertedText = "";
 
 }
 
 function addToLatexEditor(text, type) {
   var editor = ace.edit("editor");
   editor.navigateFileEnd();
-
-  if(type == "title"){
-    if(text.length > 0)
-      text = "\\title{"+text+"}";
-    editor.insert(text+"\n");
-  } else if (type == "author"){
-    if(text.length > 0)
-      text = "\\author{"+text+"}";
-    editor.insert(text+"\n");
-  } else if (type == "date"){
-    if(text.length > 0)
-      text = "\\date{"+text+"}";
-    editor.insert(text+"\n");
-  } else if (type == "end") {
-      editor.insert(text);
-  } else if (type == "init") {
-      editor.insert(text+"\n");
-  } else {
-      editor.navigateLineStart();
-      editor.insert(text+"\n");
-  }
+    if(text != ""){
+      if(type == "title"){
+        if(text.length > 0)
+          text = "\\title{"+text+"}";
+        editor.insert(text+"\n");
+      } else if (type == "author"){
+        if(text.length > 0)
+          text = "\\author{"+text+"}";
+        editor.insert(text+"\n");
+      } else if (type == "date"){
+        if(text.length > 0)
+          text = "\\date{"+text+"}";
+        editor.insert(text+"\n");
+      } else if (type == "end") {
+          editor.insert(text);
+      } else if (type == "init") {
+          editor.insert(text+"\n");
+      } else {
+          editor.navigateLineStart();
+          editor.insert(text+"\n");
+      }
+    }
 
 }

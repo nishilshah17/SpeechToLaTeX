@@ -25,6 +25,7 @@
       <a href="#" onclick="start()"><img src="img/mic.png" /></a>
       <a href="#" onclick="stop()">Stop Mic</a>
       <a href="#" onclick="handleSpeech()">Compile</a>
+      <a href="#" onclick="clear()">Clear</a>
 
       <div id="results">
         <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
@@ -47,7 +48,6 @@
     addToLatexEditor("\\end{document}", "end");
 
     var final_transcript;
-    var total_transcript;
 
     var recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
@@ -69,7 +69,7 @@
 
     function handleSpeech() {
       convertText(final_transcript);
-      final_transcript = "";
+      clear();
     }
 
     var two_line = /\n\n/g;
@@ -113,6 +113,15 @@
       addToLatexEditor(document.getElementById('date').value, 'date');
       toggleOverlay();
 
+    }
+      
+    function clear() {
+        final_transcript = "";
+        interim_transcript = "";
+        alert(final_span.innerHTML);
+        alert(interim_span.innerHTML);
+        final_span.innerHTML = linebreak(final_transcript);
+        interim_span.innerHTML = linebreak(interim_transcript);
     }
 
   </script>
