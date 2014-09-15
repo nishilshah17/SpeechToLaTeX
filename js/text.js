@@ -339,6 +339,8 @@ function convert(s) {
 function isReserved(s) {
     switch(s) {
         case "line": return true;
+        case "vine": return true;
+        case "
         case "equation": return true;
         case "equations": return true;
         case "page": return true;
@@ -371,7 +373,7 @@ function convertText(text) {
 
             var currentWord = words[i];
 
-            if (currentWord == "new" || currentWord == "end" || currentWord == "and" || currentWord == "&" || currentWord == "absolute") {
+            if (currentWord == "new" || currentWord == "news" || currentWord == "end" || currentWord == "and" || currentWord == "&" || currentWord == "absolute") {
                 if(i < words.length - 1 && isReserved(words[i+1])) {
                     words[i] = words[i] + words[i+1];
                 }
