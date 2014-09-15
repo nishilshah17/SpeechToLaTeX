@@ -158,6 +158,8 @@ function isCommand(s) {
     switch (s) {
         case "compile": return true;
         case "newline": return true;
+        case "newsline": return true;
+        case "newvine": return true;
         case "newpage": return true;
         case "newequation": return true;
         case "endequation": if (inEquation) return true;
@@ -225,7 +227,9 @@ function convertCommand(s) {
     }
 
     switch(s) {
-        case "newline": return "\\\newline";
+        case "newline": return "\\newline";
+        case "newvine": return "\\newline";
+        case "newsline": return  "\\newline";
         case "newpage": return "\\newpage";
         case "newequation": inEquation = true;
                             return "$";
