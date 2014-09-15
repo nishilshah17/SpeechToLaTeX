@@ -340,7 +340,6 @@ function isReserved(s) {
     switch(s) {
         case "line": return true;
         case "vine": return true;
-        case "
         case "equation": return true;
         case "equations": return true;
         case "page": return true;
